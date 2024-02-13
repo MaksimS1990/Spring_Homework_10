@@ -24,8 +24,7 @@ import java.util.*;
 
 import static com.example.ListTasks.model.TaskStatus.IN_PROGRESS;
 import static com.example.ListTasks.model.TaskStatus.NOT_STARTED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -100,12 +99,30 @@ public class ServiceTest {
     @Test
     public void updateByIdTest() {
         // given
-        tasks.add(task1);
-        given(taskRepository.findById(1L)).willReturn(Optional.ofNullable(tasks.get(0)));
-        given(taskRepository.save(task2)).willReturn(task2);
+        //tasks.add(task1);
+        taskRepository.save(task1);
+        given(taskRepository.findById(1L)).willReturn(Optional.ofNullable(task1));
+        //given(taskRepository.save(task2)).willReturn(task2);
         // when
-        taskRepository.updateTaskById(task1.getTitleTask(), task1.getStatus(), task1.getId());
+        taskService.updateById(1L, task2);
+        //taskRepository.updateTaskById(task1.getTitleTask(), task1.getStatus(), task1.getId());
         // then
-        assertEquals(task1, tasks.get(0));
+        assertFalse(taskRepository.findAll().contains(task1));
+    }
+
+    @Test
+    public void deleteTest() {
+        // given
+        taskRepository.save(task1);
+                                              //given(taskRepository.findById(1L)).willReturn(Optional.ofNullable((tasks.get(0))));
+        // then
+                                              // taskService.deleteById(2L);
+        taskRepository.delete(task1);
+                                              //tasks.remove(task1);
+        // then
+                                              //List<Task> tasks2 = new ArrayList<>();
+                                              //tasks.remove(task1);
+                                              //assertEquals(tasks, taskService.findTasksByStatus(task1.getStatus()));
+        assertFalse(taskRepository.findAll().contains(task1));
     }
 }
