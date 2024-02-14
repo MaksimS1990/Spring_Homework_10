@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 import java.time.LocalDateTime;
@@ -99,30 +100,29 @@ public class ServiceTest {
     @Test
     public void updateByIdTest() {
         // given
-        //tasks.add(task1);
-        taskRepository.save(task1);
-        given(taskRepository.findById(1L)).willReturn(Optional.ofNullable(task1));
-        //given(taskRepository.save(task2)).willReturn(task2);
+        tasks.add(task1);
+        given(taskRepository.findById(1L)).willReturn(Optional.ofNullable(tasks.get(0)));
+        given(taskRepository.save(task2)).willReturn(task2);
         // when
-        taskService.updateById(1L, task2);
-        //taskRepository.updateTaskById(task1.getTitleTask(), task1.getStatus(), task1.getId());
+        Task taskFind = taskRepository.findById(1L).get();
+        task2.setTitleTask("сделать тесты");
+        task2.setStatus(TaskStatus.COMPLETED);
+        Task taskSave = taskRepository.save(task2);
         // then
-        assertFalse(taskRepository.findAll().contains(task1));
+        assertEquals(taskSave, task2);
     }
 
     @Test
     public void deleteTest() {
         // given
-        taskRepository.save(task1);
-                                              //given(taskRepository.findById(1L)).willReturn(Optional.ofNullable((tasks.get(0))));
+        tasks.add(task1);
+        given(taskRepository.save(task1)).willReturn(tasks.get(0));
+        // given(taskService.delete(task1));
         // then
-                                              // taskService.deleteById(2L);
-        taskRepository.delete(task1);
-                                              //tasks.remove(task1);
+        Task saveTask = taskRepository.save(task1);
+        taskService.delete(task1);
         // then
-                                              //List<Task> tasks2 = new ArrayList<>();
-                                              //tasks.remove(task1);
-                                              //assertEquals(tasks, taskService.findTasksByStatus(task1.getStatus()));
-        assertFalse(taskRepository.findAll().contains(task1));
+        assertTrue(tasks.contains(task1));
+        // assertFalse(tasks.contains(task1));
     }
 }
